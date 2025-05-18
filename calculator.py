@@ -1,18 +1,19 @@
-def calculate(**only_exp):
+def calculate(exp: str) -> str:
+    """"
+    Caculates the expression
+    """
     
-    value_one = int(only_exp["value_one"])
-    value_two = int(only_exp["value_two"])
+    splitted_exp = exp.split(' ')
+    if splitted_exp[1] == '+':
+        return str(float(splitted_exp[0]) + float(splitted_exp[2]))
     
-    match only_exp["operator"]:
-        case "+":
-            return value_one + value_two
-        case "-":
-            return value_one - value_two
-        case "*":
-             return value_one * value_two
-        case "/":
-             return value_one / value_two
-             
-            
-if __name__ == "__main__":
-    print(calculate("3", "+", "3"))
+    elif splitted_exp[1] == '-':
+        return str(float(splitted_exp[0]) - float(splitted_exp[2]))
+
+    elif splitted_exp[1] == '*':
+        return str(float(splitted_exp[0]) * float(splitted_exp[2]))
+    
+    elif splitted_exp[1] == '/':
+        if float(splitted_exp[2]) == 0:
+            raise ZeroDivisionError("Division by zero is not allowed")
+        return str(float(splitted_exp[0]) / float(splitted_exp[2]))

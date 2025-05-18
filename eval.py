@@ -1,61 +1,27 @@
-from reader import partitionate
-from chunker import chunkOperations
+from priority_decision import priorityPicker
+from handler import hasOperations
 from calculator import calculate
-from newExpression import backToExpression
 
+def evaluation(exp: str) -> float:
+    """"
+    Evaluates entire expression
+    """
 
-def eval(exp):
-    partitions = partitionate(exp)
-    chunks = chunkOperations(partitions)
+    if hasOperations(exp) == 0:
+        return float(exp)
+
+    elif hasOperations(exp) == 1:
+        return float(calculate(exp))
     
-    if len(chunks) == 1 :
-
-        if chunks[0][1] in ["*", "/"]:
-
-            value_one = chunks[0][0]
-            operator = chunks[0][1]
-            value_two = chunks[0][2]
-            
-            equals_to = calculate(
-                value_one=value_one,
-                operator=operator,
-                value_two=value_two
-            )
-            return equals_to
-   
-    if len(chunks) >= 2 :
-
-        if chunks[0][1] in ["*", "/"]:
-            value_one = chunks[0][0]
-            operator = chunks[0][1]
-            value_two = chunks[0][2]
-            
-            equals_to = calculate(
-                value_one=value_one,
-                operator=operator,
-                value_two=value_two
-            )
-
-            new_exp = backToExpression(exp, chunks[0], equals_to)
-
-
-            return eval(new_exp)
-
-        value_one = chunks[0][0]
-        operator = chunks[0][1]
-        value_two = chunks[0][2]
+    elif hasOperations(exp) >= 2:
+        priority_exp, priority_sympbols = priorityPicker(exp)
+        priority_result = calculate(priority_exp)
         
-        equals_to = calculate(
-            value_one=value_one,
-            operator=operator,
-            value_two=value_two
+
+        return evaluation(exp.replace(
+            priority_sympbols[0] + priority_exp + priority_sympbols[1],
+            priority_result
+            )
         )
-
-        new_exp = backToExpression(exp, chunks[0], equals_to)
-
-
-        return eval(new_exp)
-
-    
-if __name__ == "__main__" :
-    print(eval("3 + 12 - 3"))
+    else:
+        raise ValueError("Invalid expression")
