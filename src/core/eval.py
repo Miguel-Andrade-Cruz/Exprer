@@ -1,6 +1,6 @@
-from priority_decision import priorityPicker
-from handler import hasOperations
-from calculator import calculate
+from handlers.priorityPicker import priorityPicker
+from handlers.hasOperations import hasOperations
+from core.calculator import calculate
 
 def evaluation(exp: str) -> float:
     """"
@@ -14,14 +14,12 @@ def evaluation(exp: str) -> float:
         return float(calculate(exp))
     
     elif hasOperations(exp) >= 2:
-        priority_exp, priority_sympbols = priorityPicker(exp)
+        priority_exp, priority_symbols = priorityPicker(exp)
         priority_result = calculate(priority_exp)
-        
 
         return evaluation(exp.replace(
-            priority_sympbols[0] + priority_exp + priority_sympbols[1],
+            priority_symbols['delimiter_open'] + priority_exp + priority_symbols['delimiter_close'],
             priority_result
             )
         )
-    else:
-        raise ValueError("Invalid expression")
+    
